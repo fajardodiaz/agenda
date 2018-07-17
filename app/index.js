@@ -1,5 +1,6 @@
-import 'readline' from 'readline'
+import readline from 'readline'
 import { Event } from './db'
+import { ask } from './utils'
 
 const reader = readline.createInterface({
   input: process.stdin,
@@ -8,23 +9,33 @@ const reader = readline.createInterface({
 
 let event = {}
 
-reader.question('¿Qué vas a hacer?', (description) => {
+Event.collection().fetch()
+.then((collection) => {
+  collection.models.forEach((event) => {
+    let ev = event.toJSON()
+    console.log(`${ev.id}: ${ev.description}`)
+  })
+  newEvent()
+})
+
+const newEvent = () => ask(reader, '¿Qué vas a hacer?')
+.then((description) => {
   event.description = description
+  return ask(reader,  '¿Dónde vas a hacerlo?')
 })
-
-reader.question('¿Dónde vas a hacerlo?', (place) => {
+.then((place) => {
   event.place = place
+  return ask(reader, '¿Cuándo vas a hacerlo?')
 })
-
-reader.question('¿Cuándo vas a hacerlo?', (date) => {
+.then((date) => {
   event.date = date
+  return ask(reader, '¿A qué hora vas a hacerlo?')
 })
-
-reader.question('¿A qué hora vas a hacerlo?', (time) => {
-  event.time = time
-  reader.close()
-})
-
-new Event(event).save().then(() => {
-  console.log('Evento creado con éxito!')  
+  .then((time) => {
+    event.time = time
+    reader.close()
+    console.log(`Vas a ${event.description} en ${event.place}, ${event.date}, ${event.time}`)
+    new Event(event).save().then(() => {
+      console.log('Evento creado con éxito!')
+    })
 })
