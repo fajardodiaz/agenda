@@ -1,11 +1,9 @@
-import knex from 'knex'
 import bookshelf from 'bookshelf'
+import { connection } from './db/init.js'
 
-const connection = knex({
-  client: 'sqlite3',
-  connection: {
-    filename '../content/db.sqlite'
-  }
+export const db = bookshelf(connection)
+
+export const Event = db.Model.extend({
+  tableName: 'events',
+  hasTimestamps: true
 })
-
-const db = bookshelf(connection)
