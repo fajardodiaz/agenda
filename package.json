@@ -4,14 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon app/index.js --exec babel-node --presets es2017,env",
+    "build": "babel app -d dist",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "knex": "knex"
   },
+  "serve": "node app/index.js",
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "babel-preset-es2017": "^6.24.1",
     "babel-runtime": "^6.26.0",
     "bookshelf": "^0.13.3",
     "knex": "^0.13.0",
+    "nodemon": "^1.18.2",
     "sqlite3": "^4.0.1"
   },
   "devDependencies": {
